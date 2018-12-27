@@ -42,7 +42,7 @@ def info():
 	return '''
 		Hello World!
 		
-		This is DonatuSoft EightRelay Manager for KMTronic USB Relay boxes.
+		This is DonatuSoft HTTP middleware for KMTronic USB relay boxes.
 		
 		---------------------------------------------------------------------------------------------------------------------------------------
 		 USAGE:
@@ -55,8 +55,9 @@ def info():
 			GET  /relays/<nr>                         Returns status of the specified relay as a single boolean.
 			POST /relays/<nr>                         Turns ON or OFF the relay (whether body contains 'ON' or 'OFF' part)
 					
-		Upon startup the middleware RESETS all the relays as the status can NOT be retrieved from the module itself! We store them internally.
+		Upon startup the middleware RESETs all relays as the status can NOT be retrieved from the module itself! We store them internally.
 		
+		https://github.com/donatmarko/kmtronic-usb-relaybox-http
 		www.donatus.hu
 		2018
 	'''
