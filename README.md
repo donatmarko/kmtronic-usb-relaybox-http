@@ -8,9 +8,12 @@ It contains a lightweight web-server (based on Bottle) and makes it possible to 
 
 ## Installation and running
 1. Install the requirements:
+
    `python -m pip install -r requirements.txt`
 2. Run the middleware with specifying the COM and TCP ports:
+
    `python -m main.py COM8 8000`
+   
    `python -m main.py /dev/ttyACM0 8000`
 3. Done :)
 
