@@ -10,12 +10,12 @@ It contains a lightweight web-server (based on Bottle) and makes it possible to 
 1. Install the requirements:
 
    `python -m pip install -r requirements.txt`
-2. Run the middleware with specifying the COM and TCP ports:
 
-   `python main.py COM8 8000`
-   
-   `python main.py /dev/ttyACM0 8000`
-3. Done :)
+2. Copy `config.sample.py` to `config.py` and fill the variables.
+
+3. Run the middleware:
+
+   `python main.py`
 
 ## Commands
 Method | URI                 | Content-Type     | Purpose
