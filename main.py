@@ -9,21 +9,17 @@ import sys
 import json
 import bottle
 import time
+from config import *
 
 # Array that stores the relays' statuses
 relaystates=[False, False, False, False, False, False, False, False]
 print("DonatuSoft HTTP middleware for KMTronic USB relay boxes. www.donatus.hu. 2018.")
 
-# We need two arguments: COM port and TCP port (for webserver).
-if len(sys.argv) != 3:
-	print("Missing argument: please specify the serial and the TCP ports respectively.")
-	quit()
-
 # As Bottle is asynchronous, we have to connect to the COM port on-demand.
-def serialconnect():
+def serialconnect(): 
 	ser=serial.Serial()
 	try:
-		ser = serial.Serial(sys.argv[1])
+		ser = serial.Serial(serial_port)
 		print("Opening " + ser.name + ".")
 	except:
 		print("Unable to open the given serial port. Maybe you are not admin/root (and you'd need to be)")
@@ -124,6 +120,6 @@ def toggle(relay):
 # Core functions
 try:
 	relayinit()
-	bottle.run(host='0.0.0.0', port=sys.argv[2])
+	bottle.run(host='0.0.0.0', port=web_port)
 except KeyboardInterrupt:
 	quit()
