@@ -1,7 +1,7 @@
 __author__ = "Donat Marko"
-__copyright__ = "2018 Donat Marko | www.donatus.hu"
+__copyright__ = "2020 Donat Marko | www.donatus.hu"
 __credits__ = ["Donat Marko"]
-__license__ = "GPL-3.0"
+__license__ = "GPL - 3.0"
 
 import serial
 import time
@@ -12,12 +12,12 @@ import time
 from config import *
 
 # Array that stores the relays' statuses
-relaystates=[False, False, False, False, False, False, False, False]
-print("DonatuSoft HTTP middleware for KMTronic USB relay boxes. www.donatus.hu. 2018.")
+relaystates = [False, False, False, False, False, False, False, False]
+print("DonatuSoft HTTP middleware for KMTronic USB relay boxes. www.donatus.hu. 2020.")
 
 # As Bottle is asynchronous, we have to connect to the COM port on-demand.
 def serialconnect(): 
-	ser=serial.Serial()
+	ser = serial.Serial()
 	try:
 		ser = serial.Serial(serial_port)
 		print("Opening " + ser.name + ".")
@@ -27,14 +27,14 @@ def serialconnect():
 
 # We need to reset the relays (i.e. switch them off) upon startup as the module does NOT store (neither return) the states.
 def relayinit():
-	ser=serialconnect()
-	ser.write(serial.to_bytes([0xFF,0x00,0x00]))
+	ser = serialconnect()
+	ser.write(serial.to_bytes([0xFF, 0x00, 0x00]))
 	print("Relays reset.")
 	
 # Root page
 @bottle.route('/')
 def info():
-	bottle.response.content_type="text/text"
+	bottle.response.content_type = "text/text"
 	return '''
 		Hello World!
 		
@@ -55,34 +55,34 @@ def info():
 		
 		https://github.com/donatmarko/kmtronic-usb-relaybox-http
 		www.donatus.hu
-		2018
+		2020
 	'''
 
 # JSON formatted summary
 @bottle.route('/relays')
 def index():
-	bottle.response.content_type="application/json"
-	jsonstates=dict()
-	for i, state in enumerate(relaystates, start=1):
-		jsonstates["R" + str(i)]=state
+	bottle.response.content_type = "application/json"
+	jsonstates = dict()
+	for i, state in enumerate(relaystates, start = 1):
+		jsonstates["R" + str(i)] = state
 	return json.dumps(jsonstates)
 
-# We do not accept any operations on 0th relay = address reserver by KMTronic for all relays.
+# We do not accept any operations on 0th relay = address reserved by KMTronic for all relays.
 @bottle.route('/relays/0/toggle')
 @bottle.route('/relays/0/on')
 @bottle.route('/relays/0/off')
 def illegaloperation():
-	bottle.response.content_type="application/json"
+	bottle.response.content_type = "application/json"
 	return '{"error":"Illegal Operation"}'
 	
 # Returns state as boolean of single relays
-@bottle.route('/relays/<relay>', method='GET')
+@bottle.route('/relays/<relay>', method = 'GET')
 def relaybool(relay):
-	relay=int(relay)
-	return "ON" if relaystates[relay-1] else "OFF"
+	relay = int(relay)
+	return "ON" if relaystates[relay - 1] else "OFF"
 
 # Relay operations through POST request
-@bottle.route('/relays/<relay>', method='POST')
+@bottle.route('/relays/<relay>', method = 'POST')
 def post(relay):
 	for l in bottle.request.body:
 		if "ON" in str(l):
@@ -95,31 +95,31 @@ def post(relay):
 # Relay operations through GET request
 @bottle.route('/relays/<relay>/on')
 def on(relay):
-	relay=int(relay)
-	serialconnect().write(serial.to_bytes([0xFF,relay,0x01]))
+	relay = int(relay)
+	serialconnect().write(serial.to_bytes([0xFF, relay, 0x01]))
 	time.sleep(0.05)
-	relaystates[relay-1]=True
+	relaystates[relay - 1] = True
 	return index()
 	
 @bottle.route('/relays/<relay>/off')
 def off(relay):
-	relay=int(relay)
-	serialconnect().write(serial.to_bytes([0xFF,relay,0x00]))
+	relay = int(relay)
+	serialconnect().write(serial.to_bytes([0xFF, relay, 0x00]))
 	time.sleep(0.05)
-	relaystates[relay-1]=False
+	relaystates[relay - 1] = False
 	return index()
 	
 @bottle.route('/relays/<relay>/toggle')
 def toggle(relay):
-	relay=int(relay)
-	relaystates[relay-1]=not(relaystates[relay-1])
-	serialconnect().write(serial.to_bytes([0xFF,relay, 0x01 if relaystates[relay-1] else 0x00 ]))
+	relay = int(relay)
+	relaystates[relay - 1] = not(relaystates[relay - 1])
+	serialconnect().write(serial.to_bytes([0xFF, relay, 0x01 if relaystates[relay - 1] else 0x00 ]))
 	time.sleep(0.05)
 	return index()
 
 # Core functions
 try:
 	relayinit()
-	bottle.run(host='0.0.0.0', port=web_port)
+	bottle.run(host = '0.0.0.0', port = web_port)
 except KeyboardInterrupt:
 	quit()
